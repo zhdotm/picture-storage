@@ -1,0 +1,208 @@
+@ApiModel(value = "RentCallStrategyCreateOrUpdateReqVo", description = "租金催缴策略新增修改")
+@Data
+public class RentCallStrategyCreateOrUpdateReqVo {
+
+    /**
+     * 租金催缴策略主表逻辑主键
+     */
+    @ApiModelProperty(value = "租金催缴策略主表逻辑主键")
+    private String rentCallStrategyMainId;
+
+    /**
+     * 策略名称
+     */
+    @NotBlank(message = "策略名称不能为空")
+    @Size(max = 30, message = "策略名称最大长度30")
+    @ApiModelProperty(value = "策略名称")
+    private String strategyName;
+
+    /**
+     * 策略状态（启用：true，停用：false）
+     */
+    @NotNull(message = "策略状态不能为空")
+    @ApiModelProperty(value = "策略状态（启用：true，停用：false）")
+    private Boolean status;
+
+    /**
+     * 策略说明
+     */
+    @Size(max = 100, message = "策略说明最大长度100")
+    @ApiModelProperty(value = "策略说明")
+    private String strategyExplain;
+
+    /**
+     * 租金方案
+     */
+    @ApiModelProperty(value = "租金方案")
+    private List<Programme> programmes;
+
+    /**
+     * 短信策略配置
+     */
+    @ApiModelProperty(value = "短信策略配置")
+    private List<StrategyConfigSms> strategyConfigSms;
+
+    /**
+     * 下控策略配置
+     */
+    @ApiModelProperty(value = "下控策略配置")
+    private List<StrategyConfigUnderControl> strategyConfigUnderControls;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Programme {
+
+        /**
+         * 方案ID
+         */
+        @ApiModelProperty(value = "方案ID")
+        private String programmeId;
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class StrategyConfigSms {
+
+        /**
+         * 催缴配置策略逻辑主键
+         */
+        @TableField(value = "config_sms_id")
+        private String configSmsId;
+
+        /**
+         * 触发条件（json存储）
+         */
+        @ApiModelProperty(value = "触发条件（json存储）")
+        private TriggerConditions triggerConditions;
+
+        /**
+         * 推送频率（只推送一次：once，每天推送一次：everyday）
+         */
+        @ApiModelProperty(value = "推送频率（只推送一次：once，每天推送一次：everyday）")
+        private RentCallPushFrequencyEnum pushFrequency;
+
+        public void setPushFrequency(RentCallPushFrequencyEnum pushFrequency) {
+            this.pushFrequency = pushFrequency;
+        }
+
+        public void setPushFrequency(String pushFrequency) {
+            if (StrUtil.isNotBlank(pushFrequency)) {
+
+                this.pushFrequency = RentCallPushFrequencyEnum.valueOf(pushFrequency);
+            }
+        }
+
+        /**
+         * 推送渠道(app、sms数组)
+         */
+        @ApiModelProperty(value = "推送渠道(app、sms数组)")
+        private List<String> pushChannel;
+
+        /**
+         * 短信模版
+         */
+        @ApiModelProperty(value = "短信模版")
+        private String smsTemplateCode;
+
+        /**
+         * 触发条件
+         *
+         * @author zhihao.mao
+         */
+        @Data
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class TriggerConditions {
+
+            /**
+             * 逾期天数小于
+             */
+            @ApiModelProperty(value = "逾期天数小于")
+            private Integer overdueDaysLt;
+
+            /**
+             * 逾期天数大于等于
+             */
+            @ApiModelProperty(value = "逾期天数大于等于")
+            private Integer overdueDaysGe;
+        }
+    }
+
+    /**
+     * 下控策略
+     */
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class StrategyConfigUnderControl {
+
+        /**
+         * 催缴配置策略逻辑主键
+         */
+        @ApiModelProperty(value = "催缴配置策略逻辑主键")
+        private String configUnderControlId;
+
+        /**
+         * 触发条件（json存储）
+         */
+        @ApiModelProperty(value = "触发条件（json存储）")
+        private TriggerConditions triggerConditions;
+
+        /**
+         * 下控类型（关闭充电权限：close，限制充电权限：limit）
+         */
+        @ApiModelProperty(value = "下控类型（关闭充电权限：close，限制充电权限：limit）")
+        private RentCallUnderControlTypeEnum underControlType;
+
+        public void setUnderControlType(RentCallUnderControlTypeEnum underControlType) {
+            this.underControlType = underControlType;
+        }
+
+        public void setUnderControlType(String underControlType) {
+            if (StrUtil.isNotBlank(underControlType)) {
+
+                this.underControlType = RentCallUnderControlTypeEnum.valueOf(underControlType);
+            }
+        }
+
+        /**
+         * 下控参数（json存储）（由于目前只用到关闭充电权限，这个参数暂时用不到）
+         */
+        @ApiModelProperty(value = "下控参数（json存储）（由于目前只用到关闭充电权限，这个参数暂时用不到）")
+        private Object underControlParameters;
+
+        /**
+         * 推送渠道(app、sms数组)
+         */
+        @ApiModelProperty(value = "推送渠道(app、sms数组)")
+        private List<String> pushChannel;
+
+        /**
+         * 短信模版
+         */
+        @ApiModelProperty(value = "短信模版")
+        private String smsTemplateCode;
+
+        /**
+         * 触发条件
+         *
+         * @author zhihao.mao
+         */
+        @Data
+        @AllArgsConstructor
+        @NoArgsConstructor
+        public static class TriggerConditions {
+
+            /**
+             * 逾期天数等于
+             */
+            @ApiModelProperty(value = "逾期天数等于")
+            private Integer overdueDaysEq;
+
+        }
+    }
+
+}
